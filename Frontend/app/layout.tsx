@@ -3,8 +3,8 @@ import './globals.css'
 import { ThemeProvider } from "@/components/theme-provider"
 
 export const metadata: Metadata = {
-  title: 'Azure Security Benchmark Analyzer',
-  description: 'Analyze Azure security benchmarks and controls',
+  title: 'VibeAudit Azure Security Benchmark',
+  description: 'Analyze Azure security benchmarks and controls with VibeAudit',
 }
 
 export default async function RootLayout({

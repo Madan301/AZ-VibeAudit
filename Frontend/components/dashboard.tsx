@@ -186,7 +186,7 @@ export default function Dashboard() {
               <Image src="/Icons/icons8-azure-48.png" alt="Azure Logo" width={40} height={40} className="h-10 w-10 object-contain" />
             </div>
             <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/70">
-              Azure Security Benchmark Analyzer
+              VibeAudit Azure Security Benchmark
             </h1>
           </div>
           <ThemeToggle />
@@ -267,7 +267,7 @@ export default function Dashboard() {
               <CardContent className="pt-6 flex flex-col gap-4">
                 <div className="flex items-center gap-2">
                   <Shield className="h-5 w-5 text-primary" />
-                  <h3 className="text-xl font-semibold">Analysis Controls</h3>
+                  <h3 className="text-xl font-semibold">Control Analysis</h3>
                 </div>
                 <Button
                   onClick={startAnalysis}
