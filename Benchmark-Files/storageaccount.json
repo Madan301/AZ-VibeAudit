@@ -1,0 +1,78 @@
+{
+  "name": "Azure Storage Security Benchmark",
+  "version": "1.0",
+  "description": "Security benchmark for Azure Storage accounts based on Azure Security Benchmark and best practices",
+  "created_date": "2025-05-13",
+  "controls": [
+    {
+      "id": "STG-1.1",
+      "name": "Enable Secure Transfer",
+      "description": "Ensure that Secure transfer required is enabled to enforce HTTPS for all storage account connections.",
+      "portal_path": "Storage Accounts > [Storage Account Name] > Configuration > Secure transfer required",
+      "status": "Not Checked"
+    },
+    {
+      "id": "STG-1.2",
+      "name": "Restrict Public Access",
+      "description": "Disable public network access for the storage account unless explicitly required, and configure firewall rules.",
+      "portal_path": "Storage Accounts > [Storage Account Name] > Networking > Firewalls and virtual networks",
+      "status": "Not Checked"
+    },
+    {
+      "id": "STG-1.3",
+      "name": "Enable Blob Public Access Control",
+      "description": "Ensure that Allow Blob public access is disabled to prevent anonymous access to blobs.",
+      "portal_path": "Storage Accounts > [Storage Account Name] > Configuration > Allow Blob public access",
+      "status": "Not Checked"
+    },
+    {
+      "id": "STG-2.1",
+      "name": "Use Customer-Managed Keys for Encryption",
+      "description": "Configure storage accounts to use customer-managed keys (CMK) for data encryption instead of Microsoft-managed keys.",
+      "portal_path": "Storage Accounts > [Storage Account Name] > Encryption > Customer-managed keys",
+      "status": "Not Checked"
+    },
+    {
+      "id": "STG-2.2",
+      "name": "Enable Soft Delete for Blobs",
+      "description": "Enable soft delete for blobs to allow recovery of deleted blob data within the retention period.",
+      "portal_path": "Storage Accounts > [Storage Account Name] > Data protection > Enable soft delete for blobs",
+      "status": "Not Checked"
+    },
+    {
+      "id": "STG-3.1",
+      "name": "Configure Minimum TLS Version",
+      "description": "Set the minimum TLS version to 1.2 for secure communication with the storage account.",
+      "portal_path": "Storage Accounts > [Storage Account Name] > Configuration > Minimum TLS version",
+      "status": "Not Checked"
+    },
+    {
+      "id": "STG-4.1",
+      "name": "Enable Microsoft Defender for Storage",
+      "description": "Enable Microsoft Defender for Storage to detect and alert on suspicious activities.",
+      "portal_path": "Storage Accounts > [Storage Account Name] > Security + networking > Microsoft Defender for Cloud",
+      "status": "Not Checked"
+    },
+    {
+      "id": "STG-4.2",
+      "name": "Enable Diagnostic Logs",
+      "description": "Enable diagnostic logging for Storage account operations to monitor and audit activities.",
+      "portal_path": "Storage Accounts > [Storage Account Name] > Monitoring > Diagnostic settings",
+      "status": "Not Checked"
+    },
+    {
+      "id": "STG-5.1",
+      "name": "Use Role-Based Access Control (RBAC)",
+      "description": "Implement least-privilege access using Azure RBAC roles for storage account management and data access.",
+      "portal_path": "Storage Accounts > [Storage Account Name] > Access Control (IAM)",
+      "status": "Not Checked"
+    },
+    {
+      "id": "STG-5.2",
+      "name": "Disable Shared Key Access",
+      "description": "Disable shared key authorization and use Azure AD authentication for storage account access.",
+      "portal_path": "Storage Accounts > [Storage Account Name] > Configuration > Allow shared key access",
+      "status": "Not Checked"
+    }
+  ]
+}
