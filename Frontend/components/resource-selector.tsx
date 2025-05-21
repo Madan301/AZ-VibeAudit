@@ -3,7 +3,7 @@
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Server, Database, Cloud, Lock, HardDrive, Globe, Box } from "lucide-react"
+import { Server, Database, Cloud, Lock, HardDrive, Globe, Box, Code, Workflow, Terminal } from "lucide-react"
 import { Shield } from "lucide-react"
 
 interface ResourceSelectorProps {
@@ -38,6 +38,12 @@ export function ResourceSelector({
         return <Box className="h-4 w-4 mr-2" />
       case "network-security-group":
         return <Shield className="h-4 w-4 mr-2" />
+      case "function-app":
+        return <Terminal className="h-4 w-4 mr-2" />
+      case "web-app":
+        return <Code className="h-4 w-4 mr-2" />
+      case "logic-app":
+        return <Workflow className="h-4 w-4 mr-2" />
       default:
         return <Cloud className="h-4 w-4 mr-2" />
     }
@@ -92,6 +98,24 @@ export function ResourceSelector({
               <div className="flex items-center">
                 <Box className="h-4 w-4 mr-2" />
                 Container Registry
+              </div>
+            </SelectItem>
+            <SelectItem value="function-app">
+              <div className="flex items-center">
+                <Terminal className="h-4 w-4 mr-2" />
+                Function App
+              </div>
+            </SelectItem>
+            <SelectItem value="web-app">
+              <div className="flex items-center">
+                <Code className="h-4 w-4 mr-2" />
+                Web App
+              </div>
+            </SelectItem>
+            <SelectItem value="logic-app">
+              <div className="flex items-center">
+                <Workflow className="h-4 w-4 mr-2" />
+                Logic App
               </div>
             </SelectItem>
             <SelectItem value="network-security-group">

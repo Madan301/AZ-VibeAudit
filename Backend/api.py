@@ -144,8 +144,19 @@ def setup_llm():
         raise HTTPException(status_code=500, detail="No LLM API keys found")
 
 async def analyze_control(browser: Browser, browser_context: BrowserContext, llm, control: Dict, resource_name: str, output_dir: Path) -> ControlResult:
+    global stop_analysis
     control_id = control.get('id', 'Unknown')
     description = control.get('description', 'No description provided')
+    
+    if stop_analysis:
+        logger.info("Analysis stopped during control analysis")
+        return ControlResult(
+            control_id=control_id,
+            description=description,
+            passed=False,
+            screenshot_path="",
+            details="Analysis was stopped by user"
+        )
     
     task = f"""\
     You are a security compliance agent checking Azure Security Benchmark controls.
@@ -174,10 +185,32 @@ async def analyze_control(browser: Browser, browser_context: BrowserContext, llm
             enable_memory=True,
             tool_calling_method="function_calling"
         )
+        
+        # Check for stop signal before running the agent
+        if stop_analysis:
+            logger.info("Analysis stopped before agent execution")
+            return ControlResult(
+                control_id=control_id,
+                description=description,
+                passed=False,
+                screenshot_path="",
+                details="Analysis was stopped by user"
+            )
+            
         result = await agent.run(max_steps=50)
+        
+        # Check for stop signal after agent execution
+        if stop_analysis:
+            logger.info("Analysis stopped after agent execution")
+            return ControlResult(
+                control_id=control_id,
+                description=description,
+                passed=False,
+                screenshot_path="",
+                details="Analysis was stopped by user"
+            )
+            
         # Extract agent output as text
-
-        # Pass agent output to LLM for JSON extraction
         extraction_prompt = f"""
 Given the following compliance analysis result, extract a JSON object with:
 - passed: boolean (true if the control is met, false otherwise)
@@ -379,15 +412,16 @@ async def run_analysis(browser: Browser, browser_context: BrowserContext, llm, b
                 logger.info("Analysis stopped by user")
                 analysis_status["is_analyzing"] = False
                 analysis_status["current_control"] = None
-                stop_analysis = False  # Reset the flag
                 
-                # Generate partial report if we have any results
+                # Generate partial report immediately
                 if analysis_status["results"]:
                     logger.debug("Generating partial report for stopped analysis")
                     report_path = output_dir / "audit_report_partial.pdf"
                     generate_latex_report(analysis_status["results"], str(report_path))
                     logger.debug(f"Partial report generated at: {report_path}")
                 
+                # Reset the stop flag after handling
+                stop_analysis = False
                 return
             
             control_id = control.get('id', 'Unknown')
@@ -396,8 +430,25 @@ async def run_analysis(browser: Browser, browser_context: BrowserContext, llm, b
             
             try:
                 result = await analyze_control(browser, browser_context, llm, control, resource_name, output_dir)
-                logger.debug(f"Control {control_id} analysis completed. Passed: {result.passed}")
                 
+                # Check if analysis was stopped during control analysis
+                if stop_analysis:
+                    logger.info("Analysis stopped during control analysis")
+                    analysis_status["is_analyzing"] = False
+                    analysis_status["current_control"] = None
+                    
+                    # Generate partial report immediately
+                    if analysis_status["results"]:
+                        logger.debug("Generating partial report for stopped analysis")
+                        report_path = output_dir / "audit_report_partial.pdf"
+                        generate_latex_report(analysis_status["results"], str(report_path))
+                        logger.debug(f"Partial report generated at: {report_path}")
+                    
+                    # Reset the stop flag after handling
+                    stop_analysis = False
+                    return
+                
+                logger.debug(f"Control {control_id} analysis completed. Passed: {result.passed}")
                 analysis_status["results"].append(result)
                 analysis_status["progress"] = (i + 1) / len(controls) * 100
                 logger.debug(f"Analysis progress: {analysis_status['progress']}%")
@@ -406,8 +457,8 @@ async def run_analysis(browser: Browser, browser_context: BrowserContext, llm, b
                 if stop_analysis:
                     break
         
-        # Generate report
-        logger.debug("Generating LaTeX report")
+        # Generate final report
+        logger.debug("Generating final LaTeX report")
         report_path = output_dir / "audit_report.pdf"
         generate_latex_report(analysis_status["results"], str(report_path))
         logger.debug(f"Report generated at: {report_path}")
